@@ -1,0 +1,38 @@
+For [DOMAIN], use the domain name for your tenant.
+Enter your [ADMIN EMAIL]
+Enter your [ADMIN PASSWORD]
+
+--setup site collections
+
+Import-Module Microsoft.Online.SharePoint.PowerShell -UseWindowsPowerShell
+
+Connect-SPOService -Url https://[DOMAIN]-admin.sharepoint.com
+
+New-SPOSite -Url https://[DOMAIN].sharepoint.com/sites/[YOUR NAME]-hr `
+   -Title "[YOUR NAME]-HR Home" `
+   -Owner [YOUR NAME]@[DOMAIN].onmicrosoft.com `
+   -StorageQuota 1024 `
+   -Template STS#0
+   
+New-SPOSite -Url https://[DOMAIN].sharepoint.com/sites/[YOUR NAME]-ProjectSite `
+   -Title "[YOUR NAME]-Project Site" `
+   -Owner [YOUR NAME]@[DOMAIN].onmicrosoft.com `
+   -StorageQuota 1024 `
+   -Template STS#0
+
+New-SPOSite -Url https://[DOMAIN].sharepoint.com/sites/[YOUR NAME]-TeamSite `
+   -Title "[YOUR NAME]-Team Site" `
+   -Owner [YOUR NAME]@[DOMAIN].onmicrosoft.com `
+   -StorageQuota 1024 `
+   -Template STS#0
+   
+Set-SPOUser -Site https://[DOMAIN].sharepoint.com/sites/[YOUR NAME]-hr `
+   -LoginName penny@[DOMAIN].onmicrosoft.com `
+   -IsSiteCollectionAdmin $True
+
+$spoSites = Get-SPOSite | Select *
+   foreach ($spoSite in $spoSites) {
+     Write-Host "Admins for " $spoSite.Url -ForegroundColor Yellow
+     Get-SPOUser -Site $spoSite.Url | where {$_.IsSiteAdmin}
+     Write-Host
+   }
