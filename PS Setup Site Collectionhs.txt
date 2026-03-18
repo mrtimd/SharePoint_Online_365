@@ -36,3 +36,7 @@ $spoSites = Get-SPOSite | Select *
      Get-SPOUser -Site $spoSite.Url | where {$_.IsSiteAdmin}
      Write-Host
    }
+
+-- register hub
+Connect-SPOService -Url https://<tenant>-admin.sharepoint.com
+Register-SPOHubSite https://<tenant>.sharepoint.com/sites/<YourName>-ProjectsHome -Principals $null
